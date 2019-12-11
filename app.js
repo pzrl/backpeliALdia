@@ -7,6 +7,8 @@ const User = require('./models/user');
 const Theater = require('./models/theater');
 const Movie = require('./models/movie');
 const Search = require('./models/search');
+const Social = require('./models/socialM');
+const General = require('./models/general');
 const cors = require('cors');
 
 require('dotenv').config();
@@ -16,6 +18,9 @@ var usersRouter = require('./routes/users');
 var theatersRouter = require('./routes/theaters');
 var moviesRouter = require('./routes/movies');
 var searchsRouter = require('./routes/searchs');
+var chatsRouter = require('./routes/chats');
+var socialRouter = require('./routes/social');
+var apiFilmAffinityRouter = require('./routes/api');
 
 var app = express();
 
@@ -37,6 +42,9 @@ app.use('/users', usersRouter);
 app.use('/theaters', theatersRouter);
 app.use('/movies', moviesRouter);
 app.use('/searchs', searchsRouter);
+app.use('/chats', chatsRouter);
+app.use('/social', socialRouter);
+app.use('/api', apiFilmAffinityRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
