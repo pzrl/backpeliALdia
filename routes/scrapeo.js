@@ -155,8 +155,113 @@ async function getCinema(pUrl) {
 
 
 
+// COGER PELIS DE LOS TOURS
+
+/* const arrTour = [6, 8, 20, 14, 77, 7, 19, 39, 56, 40, 42, 18, 38, 12, 37, 65, 35, 67, 73, 28, 9, 17, 53, 43, 64, 29, 11, 13, 33, 52, 16, 15, 21]
+
+let i = 0;
+setInterval(async function () {
+
+    if (i < arrTour.length) {
+
+        const urlPagina = 'https://www.filmaffinity.com/es/tour.php?idtour=' + arrTour[i];
+
+        console.log('HOLA QUE ASE')
+        const response = await axios.get(urlPagina)
+        const $ = cheerio.load(response.data);
+        const url = $('.window ul li .movie-card a')
+
+
+        let j = 0;
+        setInterval(async function () {
+            if (j < arrTour.length) {
+
+
+                let pelicula = {
+                    url: url[j].attribs.href,
+                    titulo: url[j].attribs.title
+                }
+
+                console.log(pelicula)
+                await insertDatosPelicula(pelicula)
+                j++
+            }
+
+        }, 1000);
+
+        i++
+    }
+
+}, 2000);
+
+
+const saveImage = (pUrl, pIdPelicula) => {
+    axios({
+        method: 'get',
+        url: pUrl,
+        responseType: 'arraybuffer'
+    }).then((response) => {
+        fs.appendFile(`../backpeliALdia/public/images/${pIdPelicula}.jpg`, response.data, (err) => {
+            if (err) console.log(err)
+        })
+    })
+}
+
+
+const arrFotos = await getUrlPelicula()
+    console.log(arrFotos)
+
+    let i = 0;
+    setInterval(async function () {
+        console.log(arrFotos[i].id, arrFotos[i].imagen)
+        if (i < arrFotos.length) {
+            saveImage(arrFotos[i].imagen, arrFotos[i].id)
+        }
+        i++
+    }, 1000);
 
 
 
+
+
+
+
+    if (i < arrPeliculas.length) {
+                const urlEstreno = arrPeliculas[i].link;
+
+                console.log('HOLA QUE ASE', arrPeliculas[i].link)
+                const response = await axios.get(urlEstreno)
+                const $ = cheerio.load(response.data);
+                const imagen = $('.lightbox')
+
+                try {
+                    insertImagenPelicula(imagen[0].attribs.href, arrPeliculas[i].link)
+                }
+                catch (error) {
+                    console.error(error);
+                }
+
+                i++
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*/
 
 

@@ -106,6 +106,15 @@ const getSeenMovies = (pId) => {
     });
 }
 
+const getToSeeMovies = (pId) => {
+    return prom = new Promise((resolve, reject) => {
+        db.query('SELECT `peliculas`.*, `peliculas_usuarios`.* FROM `peliculas_usuarios`, `peliculas` WHERE (fk_usuario = ? && `peliculas_usuarios`.pendiente IS NOT NULL && `peliculas_usuarios`.fk_pelicula = `peliculas`.id)', [pId], (err, res) => {
+            if (err) reject(err)
+            resolve(res)
+        });
+    });
+}
+
 const checkMovie = (pPelicula) => {
     return prom = new Promise((resolve, reject) => {
         db.query('SELECT * FROM `peliculas` WHERE (titulo = ? && anio = ? && director = ?)', [pPelicula.titulo, pPelicula.anio, pPelicula.direccion], (err, res) => {
@@ -116,8 +125,9 @@ const checkMovie = (pPelicula) => {
 }
 
 const insertMovie = (pPelicula) => {
+    console.log(pPelicula)
     return prom = new Promise((resolve, reject) => {
-        db.query('INSERT INTO `peliculas` (titulo, anio, director, reparto, sinopsis) VALUES (?, ?, ?, ?, ?)', [pPelicula.titulo, pPelicula.anio, pPelicula.direccion, pPelicula.reparto, pPelicula.sinopsis], (err, res) => {
+        db.query('INSERT INTO `peliculas` (idFA, titulo, anio, director, reparto, sinopsis) VALUES (?, ?, ?, ?, ?, ?)', [pPelicula.idFA, pPelicula.titulo, pPelicula.anio, pPelicula.direccion, pPelicula.reparto, pPelicula.sinopsis], (err, res) => {
             if (err) reject(err)
             resolve(res)
         });
@@ -136,6 +146,7 @@ module.exports = {
     savePost: savePost,
     calcularDatosPeliculas: calcularDatosPeliculas,
     getSeenMovies: getSeenMovies,
+    getToSeeMovies: getToSeeMovies,
     checkMovie: checkMovie,
     insertMovie: insertMovie
 }

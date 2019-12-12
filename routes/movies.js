@@ -92,6 +92,13 @@ router.post('/seenMovies', async (req, res) => {
     res.send(arrPeliculas)
 });
 
+router.post('/toSeeMovies', async (req, res) => {
+    const userId = await middlewares.checkToken(req);
+    const arrPeliculas = await Movie.getToSeeMovies(userId)
+
+    res.send(arrPeliculas)
+})
+
 // GET localhost:3000/movies/pId
 router.get('/:pId', (req, res) => {
     Movie.getById(req.params.pId)
