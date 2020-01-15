@@ -3,18 +3,11 @@ var router = express.Router();
 
 const Search = require('../models/search');
 
-// GET localhost:3000/search/:pSearch
-router.get('/:pSearch', (req, res) => {
-    console.log(req.params.pSearch)
-    Search.getSearch(req.params.pSearch)
-        .then(result => {
-            console.log('el resultado', result)
-            res.send(result);
-        })
-        .catch(err => {
-            console.log('error en searchs route', err);
-        });
-})
+// LISTADO DE BÚSQUEDAS (PELÍCULAS, USUARIOS, CINES)
+router.get('/:pSearch', async (req, res) => {
+    const busqueda = await Search.getSearch(req.params.pSearch)
+    res.send(busqueda)
 
+})
 
 module.exports = router;

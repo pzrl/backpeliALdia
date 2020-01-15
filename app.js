@@ -20,7 +20,6 @@ var moviesRouter = require('./routes/movies');
 var searchsRouter = require('./routes/searchs');
 var chatsRouter = require('./routes/chats');
 var socialRouter = require('./routes/social');
-var apiFilmAffinityRouter = require('./routes/api');
 
 var app = express();
 
@@ -44,7 +43,6 @@ app.use('/movies', moviesRouter);
 app.use('/searchs', searchsRouter);
 app.use('/chats', chatsRouter);
 app.use('/social', socialRouter);
-app.use('/api', apiFilmAffinityRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -3,3 +3,9 @@ extends layout
 block content
   h1 peliALdia
   p red social de cine
+
+  form(action="/theaters/loadSessions", method="GET")
+    input(type="submit" value="Cargar horarios de los cines") 
+    
+
+

@@ -1,85 +1,7 @@
-
-const getById = (pId) => {
-    return prom = new Promise((resolve, reject) => {
-        db.query('SELECT * FROM peliculas WHERE id = ?', [pId], (err, row) => {
-            if (err) reject(err)
-            resolve(row[0])
-        });
-    });
-}
-
-const checkMovieUser = (pId, pUsuario) => {
-    console.log('en el checkMovie', pId, pUsuario)
-    return prom = new Promise((resolve, reject) => {
-        db.query('SELECT * FROM `peliculas_usuarios` WHERE (fk_usuario = ? && fk_pelicula = ?)', [pUsuario.id, pId.idPelicula], (err, row) => {
-            if (err) reject(err)
-            resolve(row)
-        })
-    })
-}
-
-const insertMark = (pMark) => {
-    console.log('insert', pMark)
-    return prom = new Promise((resolve, reject) => {
-        db.query('INSERT INTO `peliculas_usuarios` (fk_usuario, fk_pelicula, puntuacion, fechapuntuacion) VALUES (?, ?, ?, ?)', [pMark.idUsuario, pMark.idPelicula, pMark.puntuacion, pMark.fechaPuntuacion], (err, row) => {
-            if (err) reject(err)
-            console.log(row)
-            resolve(row)
-        })
-    })
-}
-
-const updateMark = (pMark) => {
-    console.log('update', pMark)
-    return prom = new Promise((resolve, reject) => {
-        db.query('UPDATE `peliculas_usuarios` SET puntuacion = ? WHERE fk_usuario = ? && fk_pelicula = ?', [pMark.puntuacion, pMark.idUsuario, pMark.idPelicula, pMark.fechaPuntuacion], (err, row) => {
-            if (err) reject(err)
-            resolve(row)
-        })
-    })
-}
-
-const insertToSee = (pToSee) => {
-    console.log('insert', pToSee)
-    return prom = new Promise((resolve, reject) => {
-        db.query('INSERT INTO `peliculas_usuarios` (fk_usuario, fk_pelicula, pendiente) VALUES (' + pToSee.idUsuario + ', ' + pToSee.idPelicula + ', ' + pToSee.pendiente + ')', (err, row) => {
-            if (err) reject(err)
-            resolve(row)
-        })
-    })
-}
-const updateToSee = (pToSee) => {
-    console.log('update', pToSee)
-    return prom = new Promise((resolve, reject) => {
-        db.query('UPDATE `peliculas_usuarios` SET pendiente = ? WHERE fk_usuario = ? && fk_pelicula = ?', [pToSee.pendiente, pToSee.idUsuario, pToSee.idPelicula], (err, row) => {
-            if (err) reject(err)
-            resolve(row)
-        })
-    })
-}
-
-const getChat = (pPost) => {
-    return prom = new Promise((resolve, reject) => {
-        db.query('SELECT post, autor, fecha FROM `chat-usuarios_peliculas` WHERE (fk_pelicula = ?)', [pPost.idItem], (err, rows) => {
-            if (err) reject(err)
-            resolve(rows)
-        })
-    })
-}
-
-const savePost = (pPost) => {
-    return prom = new Promise((resolve, reject) => {
-        db.query('INSERT INTO `chat-usuarios_peliculas` (fk_usuario, fk_pelicula, post, autor, fecha) VALUES (?, ?, ?, ?, ?)', [pPost.idUsuario, pPost.idItem, pPost.post, pPost.nombreUsuario, pPost.fecha], (err, res) => {
-            if (err) reject(err)
-            resolve(res)
-        })
-    })
-}
-
 const calcularDatosPeliculas = (pDatosPeliculas) => {
-    let averageMark = 0
-    let count = 0
-    let toSeeCount = 0
+    let averageMark = 0;
+    let count = 0;
+    let toSeeCount = 0;
     for (dato of pDatosPeliculas) {
         if (dato.puntuacion > 0) {
             count++;
@@ -97,29 +19,113 @@ const calcularDatosPeliculas = (pDatosPeliculas) => {
     return (user)
 }
 
+const checkMovie = (pPelicula) => {
+    return prom = new Promise((resolve, reject) => {
+        db.query('SELECT * FROM `peliculas` WHERE (titulo = ? && anio = ? && director = ?)', [pPelicula.titulo, pPelicula.anio, pPelicula.direccion], (err, res) => {
+            if (err) reject(err);
+            resolve(res);
+        });
+    });
+}
+
+const checkMovieUser = (pId, pUsuario) => {
+    return prom = new Promise((resolve, reject) => {
+        db.query('SELECT * FROM `peliculas_usuarios` WHERE (fk_usuario = ? && fk_pelicula = ?)', [pUsuario.id, pId.idPelicula], (err, row) => {
+            if (err) reject(err);
+            resolve(row);
+        });
+    });
+}
+
+const deletePost = (pId) => {
+    const post = 'Este comentario ha sido eliminado.';
+    const clase = 'eliminado'
+    return prom = new Promise((resolve, reject) => {
+        db.query('UPDATE `chat-usuarios_peliculas` SET post = ?, clase = ? WHERE id = ?', [post, clase, pId], (err, res) => {
+            if (err) reject(err);
+            resolve(res);
+        });
+    });
+}
+
+const editPost = (pPost) => {
+    const clase = 'editado'
+    return prom = new Promise((resolve, reject) => {
+        db.query('UPDATE `chat-usuarios_peliculas` SET post = ?, clase = ? WHERE id = ?', [pPost.post, clase, pPost.id], (err, res) => {
+            if (err) reject(err);
+            resolve(res);
+        });
+    });
+}
+
+const getById = (pId) => {
+    return prom = new Promise((resolve, reject) => {
+        db.query('SELECT * FROM peliculas WHERE id = ?', [pId], (err, row) => {
+            if (err) reject(err);
+            resolve(row[0]);
+        });
+    });
+}
+
+const getByIdFA = (pIdFA) => {
+    return prom = new Promise((resolve, reject) => {
+        db.query('SELECT * FROM peliculas WHERE idfa = ?', [pIdFA], (err, row) => {
+            if (err) reject(err);
+            resolve(row[0]);
+        });
+    });
+}
+
+const getDatosPuntuaciones = (pId) => {
+    return prom = new Promise((resolve, reject) => {
+        db.query('SELECT * FROM `peliculas_usuarios` WHERE fk_pelicula = ? && puntuacion IS NOT NULL', [pId.idPelicula], (err, rows) => {
+            if (err) reject(err);
+            resolve(rows);
+        })
+    })
+}
+
+const getHiddenUpcomingMovies = (pId) => {
+    return prom = new Promise((resolve, reject) => {
+        db.query('SELECT fk_pelicula FROM `peliculas_usuarios` WHERE fk_usuario = ? && hide = 1', [pId], (err, res) => {
+            if (err) reject(err);
+            resolve(res);
+        });
+    });
+}
+
 const getSeenMovies = (pId) => {
     return prom = new Promise((resolve, reject) => {
         db.query('SELECT `peliculas`.*, `peliculas_usuarios`.* FROM `peliculas_usuarios`, `peliculas` WHERE (fk_usuario = ? && `peliculas_usuarios`.puntuacion IS NOT NULL && `peliculas_usuarios`.fk_pelicula = `peliculas`.id)', [pId], (err, res) => {
-            if (err) reject(err)
-            resolve(res)
+            if (err) reject(err);
+            resolve(res);
         });
     });
 }
 
 const getToSeeMovies = (pId) => {
     return prom = new Promise((resolve, reject) => {
-        db.query('SELECT `peliculas`.*, `peliculas_usuarios`.* FROM `peliculas_usuarios`, `peliculas` WHERE (fk_usuario = ? && `peliculas_usuarios`.pendiente IS NOT NULL && `peliculas_usuarios`.fk_pelicula = `peliculas`.id)', [pId], (err, res) => {
-            if (err) reject(err)
-            resolve(res)
+        db.query('SELECT `peliculas`.*, `peliculas_usuarios`.* FROM `peliculas_usuarios`, `peliculas` WHERE (fk_usuario = ? && `peliculas_usuarios`.pendiente = 1 && `peliculas_usuarios`.fk_pelicula = `peliculas`.id)', [pId], (err, res) => {
+            if (err) reject(err);
+            resolve(res);
         });
     });
 }
 
-const checkMovie = (pPelicula) => {
+const getUpcomingMovies = () => {
     return prom = new Promise((resolve, reject) => {
-        db.query('SELECT * FROM `peliculas` WHERE (titulo = ? && anio = ? && director = ?)', [pPelicula.titulo, pPelicula.anio, pPelicula.direccion], (err, res) => {
-            if (err) reject(err)
-            resolve(res)
+        db.query('SELECT `peliculas`.* FROM `peliculas` WHERE fechaestreno >= NOW()', (err, res) => {
+            if (err) reject(err);
+            resolve(res);
+        });
+    });
+}
+
+const insertMark = (pMark) => {
+    return prom = new Promise((resolve, reject) => {
+        db.query('INSERT INTO `peliculas_usuarios` (fk_usuario, fk_pelicula, puntuacion, fechapuntuacion) VALUES (?, ?, ?, ?)', [pMark.idUsuario, pMark.idPelicula, pMark.puntuacion, pMark.fechaPuntuacion], (err, row) => {
+            if (err) reject(err);
+            resolve(row);
         });
     });
 }
@@ -128,25 +134,108 @@ const insertMovie = (pPelicula) => {
     console.log(pPelicula)
     return prom = new Promise((resolve, reject) => {
         db.query('INSERT INTO `peliculas` (idFA, titulo, anio, director, reparto, sinopsis) VALUES (?, ?, ?, ?, ?, ?)', [pPelicula.idFA, pPelicula.titulo, pPelicula.anio, pPelicula.direccion, pPelicula.reparto, pPelicula.sinopsis], (err, res) => {
+            if (err) reject(err);
+            resolve(res);
+        });
+    });
+}
+
+const insertToSee = (pToSee) => {
+    return prom = new Promise((resolve, reject) => {
+        db.query('INSERT INTO `peliculas_usuarios` (fk_usuario, fk_pelicula, pendiente) VALUES (' + pToSee.idUsuario + ', ' + pToSee.idPelicula + ', ' + pToSee.pendiente + ')', (err, row) => {
+            if (err) reject(err);
+            resolve(row);
+        });
+    });
+}
+
+const insertHide = (pHide) => {
+    return prom = new Promise((resolve, reject) => {
+        db.query('INSERT INTO `peliculas_usuarios` (fk_usuario, fk_pelicula, hide) VALUES (' + pHide.idUsuario + ', ' + pHide.idPelicula + ', 1)', (err, row) => {
+            if (err) reject(err);
+            resolve(row);
+        });
+    });
+}
+
+const getChat = (pPost) => {
+    return prom = new Promise((resolve, reject) => {
+        db.query('SELECT `chat-usuarios_peliculas`.*, `usuarios`.avatar FROM `chat-usuarios_peliculas`, `usuarios` WHERE (`chat-usuarios_peliculas`.fk_pelicula = ? && `chat-usuarios_peliculas`.fk_usuario = `usuarios`.id)', [pPost.idItem], (err, rows) => {
             if (err) reject(err)
-            resolve(res)
+            rows.sort(function (a, b) {
+                a = new Date(a.fecha);
+                b = new Date(b.fecha);
+                return b > a ? -1 : a < b ? 1 : 0;
+            });
+            resolve(rows);
+        });
+    });
+}
+
+const savePost = (pPost) => {
+    return prom = new Promise((resolve, reject) => {
+        db.query('INSERT INTO `chat-usuarios_peliculas` (fk_usuario, fk_pelicula, post, autor, fecha) VALUES (?, ?, ?, ?, ?)', [pPost.idUsuario, pPost.idItem, pPost.post, pPost.nombreUsuario, pPost.fecha], (err, res) => {
+            if (err) reject(err);
+            resolve(res);
+        });
+    });
+}
+
+const updateHide = (pHide) => {
+    return prom = new Promise((resolve, reject) => {
+        db.query('UPDATE `peliculas_usuarios` SET hide = 1 WHERE fk_usuario = ? && fk_pelicula = ?', [pHide.idUsuario, pHide.idPelicula], (err, row) => {
+            if (err) reject(err);
+            resolve(row);
+        });
+    });
+}
+
+const updateMark = (pMark) => {
+    return prom = new Promise((resolve, reject) => {
+        db.query('UPDATE `peliculas_usuarios` SET puntuacion = ?, fechapuntuacion = ? WHERE fk_usuario = ? && fk_pelicula = ?', [pMark.puntuacion, pMark.fechaPuntuacion, pMark.idUsuario, pMark.idPelicula], (err, row) => {
+            if (err) reject(err);
+            resolve(row);
+        });
+    });
+}
+
+const updateToSee = (pToSee) => {
+    return prom = new Promise((resolve, reject) => {
+        db.query('UPDATE `peliculas_usuarios` SET pendiente = ? WHERE fk_usuario = ? && fk_pelicula = ?', [pToSee.pendiente, pToSee.idUsuario, pToSee.idPelicula], (err, row) => {
+            if (err) reject(err);
+            resolve(row);
         });
     });
 }
 
 
+
 module.exports = {
-    getById: getById,
-    checkMovieUser: checkMovieUser,
-    insertMark: insertMark,
-    updateMark: updateMark,
-    insertToSee: insertToSee,
-    updateToSee: updateToSee,
-    getChat: getChat,
-    savePost: savePost,
     calcularDatosPeliculas: calcularDatosPeliculas,
+    checkMovieUser: checkMovieUser,
+    checkMovie: checkMovie,
+
+    deletePost: deletePost,
+
+    editPost: editPost,
+
+    getById: getById,
+    getByIdFA: getByIdFA,
+    getChat: getChat,
+    getDatosPuntuaciones: getDatosPuntuaciones,
+    getHiddenUpcomingMovies: getHiddenUpcomingMovies,
     getSeenMovies: getSeenMovies,
     getToSeeMovies: getToSeeMovies,
-    checkMovie: checkMovie,
-    insertMovie: insertMovie
+    getUpcomingMovies: getUpcomingMovies,
+
+    insertMark: insertMark,
+    insertToSee: insertToSee,
+    insertHide: insertHide,
+    insertMovie: insertMovie,
+
+    updateMark: updateMark,
+    updateToSee: updateToSee,
+    updateHide: updateHide,
+
+    savePost: savePost,
 }
